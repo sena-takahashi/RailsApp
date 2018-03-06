@@ -1,0 +1,157 @@
+var data = <%= @data %>;
+var array_data=
+[
+	<%= @data %>,
+	<%= @data_1 %>,
+	<%= @data_2 %>,
+	<%= @data_3 %>,
+	<%= @data_4 %>,
+	<%= @data_5 %>,
+	<%= @data_6 %>,
+	<%= @data_7 %>,
+	<%= @data_8 %>,
+	<%= @data_9 %>,
+	<%= @data_10 %>
+];
+var array_color=[
+	['#ff99cc','#ffffcc','#ffcccc'],//ピンク系統
+	['#ff6699','#ccffcc','#ccffff'],//ピンク系統
+	['#ffcc99','#ccffff','#ffcccc'],//ピンク系統
+	['#ff99cc','#ffffcc','#ffcccc'],//ピンク系統
+	['#ff9999','#ffcc99','#ffffcc'],//ピンク系統
+	['#ff80bf','#bfff80','#ffff18'],//キュート系統
+	['#ff80bf','#ffbe84','#bfff80'],//キュート系統
+	['#ff80bf','#e8d1ff','#d1e8ff'],//キュート系統
+	['#ff80bf','#ffd1d1','#bfff80'],//キュート系統
+	['#aa69e8','#d2a6ff','#ffd1d1'],//キュート系統
+	['#f2ddee','#c5ec84','#e8ffd1'],//上品
+	['#c5ec84','#ffc080','#a6baff'],//上品
+	['#a6baff','#c5ec84','#ffff4a'],//上品
+	['#a6baff','#ff9900','#d9e1ff'],//上品
+	['#ffd1e8','#e8d1ff','#e8ffd1']//上品
+];
+var color_code = Math.floor( Math.random() * array_color.length ) ;
+console.log(color_code);
+//console.log(array_color[color_code][0]);
+//console.log(array_color[color_code][1]);
+//console.log(array_color[color_code][2]);
+//console.log(array_data.length);
+//console.log(data);
+if(!data.toplevel){$('#result').html("取得できないキーワードです");}
+var search_word=$("#input1").val();
+if(!$("#input1").val()){
+	var first_str=data.toplevel.CompleteSuggestion[0].suggestion.data;//最初のキーワード変えたらここチェック
+	search_word=first_str.substring(0,first_str.indexOf(" "));
+	//console.log(search_word+'ファースト');
+};
+//console.log(search_word);
+var result2 = '<table class="info">';
+result2 += '<tr><th class="title">関連キーワード一覧</th></tr>';
+result2 += '<tr><td class="desc">検索キーワード：'+search_word+'</td></tr>'
+var id_number=1;
+var json_str='[{id:0,label:"'+search_word+'",color:"'+array_color[color_code][0]+'"},';
+var json_edge='[';
+for(let i = 0; i < array_data.length; i++) {
+	//console.log(json_str);
+	var j=1;
+	if(!array_data[i].toplevel){
+	  continue;
+  	};
+	//console.log(array_data[i].toplevel.CompleteSuggestion.length);
+	if(!array_data[i].toplevel.CompleteSuggestion.length){
+		console.log(array_data[i].toplevel.CompleteSuggestion.suggestion.data);
+		result2 += '<tr><td class="item"><a href="https://www.google.com/search?q=' + array_data[i].toplevel.CompleteSuggestion.suggestion.data + '" target="_blank">' + array_data[i].toplevel.CompleteSuggestion.suggestion.data + '</a></td></tr>';
+		//json_str+='{id:'+id_number+',label:"'+array_data[i].toplevel.CompleteSuggestion.suggestion.data+'",color:"#56a764"},';
+		//json_edge+='{from:'+(i)+',to:"'+id_number+'"},'
+		id_number=id_number+1;
+		continue;
+	};
+
+	//console.log("キーワード" + data.toplevel.CompleteSuggestion[i].suggestion.data);
+	array_data[i].toplevel.CompleteSuggestion.forEach(function(e){
+		var str=e.suggestion.data;
+		//console.log(e);
+		//if(str.indexOf(search_word.toLowerCase())>=0){
+		//	str=str.replace(search_word.toLowerCase(),'');
+		//	str=str.replace(' ','');
+		//console.log(str);
+		//}
+		result2 += '<tr><td class="item"><a href="https://www.google.com/search?q=' + e.suggestion.data + '" target="_blank">' + e.suggestion.data + '</a></td></tr>';
+
+		if (i==0) {
+			json_str+='{id:'+id_number+',label:"'+e.suggestion.data+'",color:"'+array_color[color_code][1]+'"},'
+		}else{
+			json_str+='{id:'+id_number+',label:"'+e.suggestion.data+'",color:"'+array_color[color_code][2]+'"},'
+		};
+		json_edge+='{from:'+(i)+',to:"'+id_number+'"},'
+		id_number=id_number+1;
+
+	});
+
+}
+json_str=json_str.slice(0,-1);
+json_edge=json_edge.slice(0,-1);
+json_str+=']';
+json_edge+=']';
+result2 += '</table>'
+//console.log(json_edge);
+$('#result').html(result2);
+var test_data=(new Function("return " + json_str))();
+var test_data2=(new Function("return " + json_edge))();
+//console.log(test_data);
+//console.log(test_data2);
+var nodes = new vis.DataSet(test_data);
+var edges = new vis.DataSet(test_data2);
+// create a network
+            var container = document.getElementById('mynetwork');
+            var data = {
+                nodes: nodes,
+                edges: edges
+            };
+            var options = {
+                nodes: {
+                    shape: 'dot',
+                    size: 16
+                },
+                layout:{
+                    randomSeed:34
+                },
+                physics: {
+                    forceAtlas2Based: {
+                        gravitationalConstant: -26,
+                        centralGravity: 0.005,
+                        springLength: 230,
+                        springConstant: 0.18
+                    },
+                    maxVelocity: 146,
+                    solver: 'forceAtlas2Based',
+                    timestep: 0.35,
+                    stabilization: {
+                        enabled:true,
+                        iterations:2000,
+                        updateInterval:25
+                    }
+                }
+            };
+            var network = new vis.Network(container, data, options);
+
+            network.on("stabilizationProgress", function(params) {
+                var maxWidth = 496;
+                var minWidth = 20;
+                var widthFactor = params.iterations/params.total;
+                var width = Math.max(minWidth,maxWidth * widthFactor);
+
+                document.getElementById('bar').style.width = width + 'px';
+                document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+            });
+            network.once("stabilizationIterationsDone", function() {
+                document.getElementById('text').innerHTML = '100%';
+                document.getElementById('bar').style.width = '496px';
+                document.getElementById('loadingBar').style.opacity = 0;
+                // really clean the dom element
+                setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+            });
+
+window.onerror = function(msg, url, line, col, error) {  
+    console.log(msg); // エラーの内容
+};

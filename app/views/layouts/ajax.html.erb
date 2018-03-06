@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>ちえのわ！楽しくキーワード検索</title>
+		<%= csrf_meta_tags %>
+
+
+		<%= stylesheet_link_tag 'ajax', 'data-turbolinks-track': 'reload' %>
+		<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.12.4.min.js"></script>
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" />		
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+		<%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+	</head>
+
+
+	<body>
+		<div class="card">
+			<%= yield %>
+		</div>
+	</body>
+	<footer>
+	<a href="https://twitter.com/trend_tracer?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-size="large" data-lang="ja" data-dnt="true" data-show-count="false">Follow @trend_tracer</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+		  <address>sensiki1007@gmail.com</address>
+	</footer>
+</html>

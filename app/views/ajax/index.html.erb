@@ -1,0 +1,43 @@
+<h1>ちえのわ！</h1>
+<p>ちえのわ！とは、キーワードに関連する言葉を直感的に把握することができます。</p>
+<p>楽しくキーワード検索してみてくださいね。</p>
+<table>
+	<%= form_tag({controller:'ajax', action:'data'}, remote:true) do %>
+	<tr><th>検索ワード</th>
+		<td><%= text_field_tag :input1 %></td>
+
+	<td><%= submit_tag "検索！" %></td></tr>
+	<% end %>
+</table>
+<hr>
+<table>
+	<tr>
+	<td valign="top">
+		<div id="networkmap"></div>
+			<div id="wrapper" >
+    			<div id="mynetwork"></div>
+    				<div id="loadingBar">
+        				<div class="outerBorder">
+            				<div id="text">0%</div>
+            			<div id="border">
+                			<div id="bar"></div>
+            			</div>
+        		</div>
+    		</div>
+		</div>
+	</td>
+	<td valign="top">
+		<div id="result">no information...</div>
+	</td>
+	</tr>
+</table>
+<script>
+var f = function(){
+	$.ajax({
+		type: 'GET',
+		url: '/ajax/data'
+	});
+};
+setTimeout(f, 600000);
+f();
+</script>
