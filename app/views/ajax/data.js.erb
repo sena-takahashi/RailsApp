@@ -28,10 +28,15 @@ var array_color=[
 	['#c5ec84','#ffc080','#a6baff'],//上品
 	['#a6baff','#c5ec84','#ffff4a'],//上品
 	['#a6baff','#ff9900','#d9e1ff'],//上品
-	['#ffd1e8','#e8d1ff','#e8ffd1']//上品
+	['#ffd1e8','#e8d1ff','#e8ffd1'],//上品
+	['#FF6969','#44D37E','#9573FF'],//カラフル
+	['#FEF37F','#B0DCEE','#BCEF82'],//ナチュラル
+	['#00336D','#EAEAE0','#4D9BE8'],//青白
+	['#00A85A','#F98A8A','#B5B5B4']//力強い緑
 ];
 var color_code = Math.floor( Math.random() * array_color.length ) ;
-console.log(color_code);
+console.log(array_data);
+//console.log(color_code);
 //console.log(array_color[color_code][0]);
 //console.log(array_color[color_code][1]);
 //console.log(array_color[color_code][2]);
@@ -39,6 +44,7 @@ console.log(color_code);
 //console.log(data);
 if(!data.toplevel){$('#result').html("取得できないキーワードです");}
 var search_word=$("#input1").val();
+search_word=search_word.replace(/　/g," ");
 if(!$("#input1").val()){
 	var first_str=data.toplevel.CompleteSuggestion[0].suggestion.data;//最初のキーワード変えたらここチェック
 	search_word=first_str.substring(0,first_str.indexOf(" "));
@@ -54,8 +60,13 @@ var json_edge='[';
 for(let i = 0; i < array_data.length; i++) {
 	//console.log(json_str);
 	var j=1;
+	if(!array_data[i]){
+		//console.log("continue最初きたよ");
+		continue;
+  	};
 	if(!array_data[i].toplevel){
-	  continue;
+		//console.log("continueきたよ");
+		continue;
   	};
 	//console.log(array_data[i].toplevel.CompleteSuggestion.length);
 	if(!array_data[i].toplevel.CompleteSuggestion.length){
@@ -77,8 +88,14 @@ for(let i = 0; i < array_data.length; i++) {
 		//console.log(str);
 		//}
 		result2 += '<tr><td class="item"><a href="https://www.google.com/search?q=' + e.suggestion.data + '" target="_blank">' + e.suggestion.data + '</a></td></tr>';
-
+		//console.log(str);
 		if (i==0) {
+			console.log(e.suggestion.data);
+			console.log(search_word);
+			if(e.suggestion.data==search_word){
+				console.log("同じじゃねぇか");
+				//continue;
+			}
 			json_str+='{id:'+id_number+',label:"'+e.suggestion.data+'",color:"'+array_color[color_code][1]+'"},'
 		}else{
 			json_str+='{id:'+id_number+',label:"'+e.suggestion.data+'",color:"'+array_color[color_code][2]+'"},'
@@ -150,8 +167,5 @@ var edges = new vis.DataSet(test_data2);
                 document.getElementById('loadingBar').style.opacity = 0;
                 // really clean the dom element
                 setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
-            });
-
-window.onerror = function(msg, url, line, col, error) {  
-    console.log(msg); // エラーの内容
-};
+			});
+			

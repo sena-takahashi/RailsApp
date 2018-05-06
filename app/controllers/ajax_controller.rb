@@ -8,10 +8,10 @@ class AjaxController < ApplicationController
 
 	def data
 		if request.post? then
-			logger.info 'postテスト開始'
-			logger.info params['input1']
+			#logger.info 'postテスト開始'
+			#logger.info params['input1']
 			#logger.info URI.parse URI.encode 'http://www.google.com/complete/search?hl=en&output=toolbar&q=' + params['input1']
-			url2 = URI.escape('http://www.google.com/complete/search?hl=en&output=toolbar&q=' + params['input1']+' ')
+			url2 = URI.escape('http://www.google.com/complete/search?hl=ja&output=toolbar&ie=utf_8&oe=utf_8&q=' + params['input1']+' ')
 			url = URI(url2)
 			https = Net::HTTP.new(url.host,443)
 			https.use_ssl = true
@@ -28,7 +28,7 @@ class AjaxController < ApplicationController
 			result["toplevel"]["CompleteSuggestion"].each do |k|
 				keyword = k["suggestion"]["data"]
 				#logger.info keyword
-				url2 = URI.escape('http://www.google.com/complete/search?hl=en&output=toolbar&q=' + keyword +' ')
+				url2 = URI.escape('http://www.google.com/complete/search?hl=ja&output=toolbar&ie=utf_8&oe=utf_8&q=' + keyword +' ')
 				url = URI(url2)
 				https = Net::HTTP.new(url.host,443)
 				https.use_ssl = true
@@ -44,7 +44,7 @@ class AjaxController < ApplicationController
 			#logger.info @data
 		else
 			first="知恵の輪"
-			url2 = URI.escape('http://www.google.com/complete/search?hl=en&output=toolbar&q=' + first +' ')
+			url2 = URI.escape('http://www.google.com/complete/search?hl=ja&output=toolbar&ie=utf_8&oe=utf_8&q=' + first +' ')
 			url = URI(url2)
 			https = Net::HTTP.new(url.host,443)
 			https.use_ssl = true
@@ -60,7 +60,7 @@ class AjaxController < ApplicationController
 			result["toplevel"]["CompleteSuggestion"].each do |k|
 				keyword = k["suggestion"]["data"]
 				#logger.info keyword
-				url2 = URI.escape('http://www.google.com/complete/search?hl=en&output=toolbar&q=' + keyword +' ')
+				url2 = URI.escape('http://www.google.com/complete/search?hl=ja&output=toolbar&ie=utf_8&oe=utf_8&q=' + keyword +' ')
 				url = URI(url2)
 				https = Net::HTTP.new(url.host,443)
 				https.use_ssl = true
